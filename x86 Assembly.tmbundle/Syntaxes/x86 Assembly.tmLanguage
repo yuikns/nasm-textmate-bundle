@@ -4,8 +4,7 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
-		<string>s</string>
-		<string>S</string>
+		<string>asm</string>
 	</array>
 	<key>name</key>
 	<string>x86 Assembly</string>
@@ -19,9 +18,9 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*\#\s*if\s+0\b</string>
+			<string>^\s*[\#%]\s*if\s+0\b</string>
 			<key>end</key>
-			<string>^\s*\#\s*endif\b</string>
+			<string>^\s*[\#%]\s*endif\b</string>
 			<key>name</key>
 			<string>comment.preprocessor</string>
 		</dict>
@@ -34,74 +33,86 @@
 			<string>comment.block</string>
 		</dict>
 		<dict>
+			<key>match</key>
+			<string>(?i)\b(dword|qword|tword|db|dw|dd|dq|dt|do|dy|resb|resw|resd|resq|rest|reso|resy|incbin|equ|times)\b</string>
+			<key>name</key>
+			<string>support.type.asm</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\.(data|bss|text)$</string>
+			<key>name</key>
+			<string>string.section</string>
+		</dict>
+		<dict>
 			<key>begin</key>
-			<string>(?x)
-        		^\s*\#\s*(define)\s+             # define
-        		((?&lt;id&gt;[a-zA-Z_][a-zA-Z0-9_]*))  # macro name
-        		(?:                              # and optionally:
-        		    (\()                         # an open parenthesis
-        		        (
-        		            \s* \g&lt;id&gt; \s*       # first argument
-        		            ((,) \s* \g&lt;id&gt; \s*)*  # additional arguments
-        		            (?:\.\.\.)?          # varargs ellipsis?
-        		        )
-        		    (\))                         # a close parenthesis
-        		)?
-        	</string>
+			<string>["']</string>
 			<key>beginCaptures</key>
 			<dict>
-				<key>1</key>
+				<key>0</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.control.import.define.c</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.function.preprocessor.c</string>
-				</dict>
-				<key>4</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.parameters.c</string>
-				</dict>
-				<key>5</key>
-				<dict>
-					<key>name</key>
-					<string>variable.parameter.preprocessor.c</string>
-				</dict>
-				<key>7</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.separator.parameters.c</string>
-				</dict>
-				<key>8</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.parameters.c</string>
+					<string>punctuation.definition.string.begin.asm</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(?=(?://|/\*))|$</string>
+			<string>["']</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end.asm</string>
+				</dict>
+			</dict>
 			<key>name</key>
-			<string>meta.preprocessor.macro.c</string>
+			<string>string.quoted.asm</string>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>match</key>
-					<string>(?&gt;\\\s*\n)</string>
-					<key>name</key>
-					<string>punctuation.separator.continuation.c</string>
+					<key>include</key>
+					<string>#string_escaped_char</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>$base</string>
+					<string>#string_placeholder</string>
 				</dict>
 			</array>
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*#\s*(error|warning)\b</string>
+			<string>'</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.begin.c</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>'</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.string.end.c</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>string.quoted.single.c</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#string_escaped_char</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>^\s*[#%]\s*(error|warning)\b</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -126,7 +137,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*#\s*(include|import)\b\s+</string>
+			<string>^\s*[#%]\s*(include|import)\b\s+</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -199,7 +210,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*#\s*(define|defined|elif|else|if|ifdef|ifndef|line|pragma|undef|endif)\b</string>
+			<string>^\s*[%#]\s*(define|defined|elif|else|if|ifdef|ifndef|line|pragma|undef|endif)\b</string>
 			<key>captures</key>
 			<dict>
 				<key>1</key>
@@ -224,13 +235,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(aaa|aad|aam|aas|adc|add|and|arpl|bound|bsf|bsr|bswap|bt|btc|btr|bts|call|cbw|cdq|clc|cld|cli|clts|cmc|cmp|cmps|cmpxchg|cwd|cwde|daa|das|dec|div|enter|esc|hlt|idiv|imul|in|inc|ins|int|into|invd|invlpg|iret|iretd|ja|jae|jb|jbe|jc|jcxz|je|jecxz|jg|jge|jl|jle|jmp|jna|jnae|jnb|jnbe|jnc|jne|jng|jnge|jnl|jnle|jno|jnp|jns|jnz|jo|jp|jpe|jpo|js|jz|lahf|lar|lds|lea|leave|les|lfs|lgdt|lidt|lgs|lldt|lmsw|lock|lods|loop|loope|loopz|loopnz|loopne|lsl|lss|ltr|mov|movs|movsx|movzx|mul|neg|nop|not|or|out|outs|pop|popa|popad|popf|popfd|push|pusha|pushad|pushf|pushfd|rcl|rcr|rep|repe|repz|repne|repnz|ret|retf|rol|ror|sahf|sal|sar|sbb|scas|setae|setnb|setb|setnae|setbe|setna|sete|setz|setne|setnz|setl|setnge|setge|setng|setle|setng|setg|setnle|sets|setns|setc|setnc|seto|setno|setp|setpe|setnp|setpo|sgdt|sidt|shl|shld|shrd|sldt|smsw|stc|std|sti|stos|str|sub|test|verr|verw|wait|fwait|wait|fwait|wbinvd|xchg|xlat|xlatb|xor)(l|w|b)?\b</string>
+			<string>\b(aaa|aad|aam|aas|adc|add|and|arpl|bound|bsf|bsr|bswap|bt|btc|btr|bts|call|cbw|cdq|clc|cld|cli|clts|cmc|cmp|cmps|cmpxchg|cwd|cwde|daa|das|dec|div|enter|esc|hlt|idiv|imul|in|inc|ins|int|into|invd|invlpg|iret|iretd|ja|jae|jb|jbe|jc|jcxz|je|jecxz|jg|jge|jl|jle|jmp|jna|jnae|jnb|jnbe|jnc|jne|jng|jnge|jnl|jnle|jno|jnp|jns|jnz|jo|jp|jpe|jpo|js|jz|lahf|lar|lds|lea|leave|les|lfs|lgdt|lidt|lgs|lldt|lmsw|lock|lods|loop|loope|loopz|loopnz|loopne|lsl|lss|ltr|mov|movs|movsx|movzx|mul|near|neg|nop|not|or|out|outs|pop|popa|popad|popf|popfd|push|pusha|pushad|pushf|pushfd|rcl|rcr|rep|repe|repz|repne|repnz|ret|retf|rol|ror|sahf|sal|sar|sbb|scas|section|setae|setnb|setb|setnae|setbe|setna|sete|setz|setne|setnz|setl|setnge|setge|setng|setle|setng|setg|setnle|sets|setns|setc|setnc|seto|setno|setp|setpe|setnp|setpo|sgdt|sidt|shl|shld|shr|shrd|sldt|smsw|stc|std|sti|stos|str|sub|test|verr|verw|wait|fwait|wait|fwait|wbinvd|xchg|xlat|xlatb|xor)(l|w|b)?\b</string>
 			<key>name</key>
 			<string>keyword.mnemonic</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>^\S+:</string>
+			<string>^\s*\.?\w+:\s*(?=$|;)</string>
 			<key>name</key>
 			<string>entity.name.label</string>
 		</dict>
@@ -248,19 +259,19 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b[0-9a-f]+h?\b</string>
+			<string>\b([0-9a-fA-F]+h?|0x[0-9a-fA-F]+)\b</string>
 			<key>name</key>
 			<string>constant.numeric.hex</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>^\.(globl|global)\b</string>
+			<string>^\.?(globl|global)\b</string>
 			<key>name</key>
 			<string>entity.directive</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>%(ip|eip|eax|ebx|ecx|edx|edi|esi|ebp|esp|ax|bx|cx|dx|di|si|bp|sp|ah|al|bh|bl|ch|cl|dh|dl|ax|bx|cx|dx|cs|ds|ss|es|fs|gs|cr0|cr2|cr3|db0|db1|db2|db3|db6|db7|tr6|tr7|st)+\b</string>
+			<string>\b%?(ip|eip|eax|ebx|ecx|edx|edi|esi|ebp|esp|ax|bx|cx|dx|di|si|bp|sp|ah|al|bh|bl|ch|cl|dh|dl|ax|bx|cx|dx|cs|ds|ss|es|fs|gs|cr0|cr2|cr3|db0|db1|db2|db3|db6|db7|tr6|tr7|st)+\b</string>
 			<key>name</key>
 			<string>storage.register</string>
 		</dict>
