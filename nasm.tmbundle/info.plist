@@ -2,9 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>description</key>
+	<string></string>
 	<key>name</key>
-	<string>x86 Assembly</string>
+	<string>NASM</string>
 	<key>uuid</key>
-	<string>4C177BCE-6E2A-4EB7-A7B8-C6C224929A8F</string>
+	<string>155e7686-93a4-4995-b62c-287932c6ebbe</string>
 </dict>
 </plist>

@@ -8,30 +8,28 @@
 		<string>s</string>
 	</array>
 	<key>name</key>
-	<string>x86 Assembly</string>
+	<string>NASM</string>
 	<key>patterns</key>
 	<array>
 		<dict>
 			<key>match</key>
-			<string>[;#].*$</string>
+			<string>;.*$</string>
+			<key>name</key>
+			<string>comment</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>^\s*;.*$</string>
 			<key>name</key>
 			<string>comment.line</string>
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*[\#%]\s*if\s+0\b</string>
+			<string>^\s*%\s*if\s+0\b</string>
 			<key>end</key>
-			<string>^\s*[\#%]\s*endif\b</string>
+			<string>^\s*%\s*endif\b</string>
 			<key>name</key>
 			<string>comment.preprocessor</string>
-		</dict>
-		<dict>
-			<key>begin</key>
-			<string>/\*</string>
-			<key>end</key>
-			<string>\*/</string>
-			<key>name</key>
-			<string>comment.block</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -248,21 +246,51 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\$[0-9a-f]+\b</string>
-			<key>name</key>
-			<string>constant.numeric.literal</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b[0-9]+\b</string>
+			<string>\b\d+d?\b</string>
 			<key>name</key>
 			<string>constant.numeric.dec</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b([0-9a-fA-F]+h?|0x[0-9a-fA-F]+)\b</string>
+			<string>\b\$[0-9][a-f]*\b</string>
 			<key>name</key>
 			<string>constant.numeric.hex</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b0[xXhH][0-9a-fA-F]+\b</string>
+			<key>name</key>
+			<string>constant.numeric.hex</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b[0-9][0-9a-fA-F]*[hHxX]\b</string>
+			<key>name</key>
+			<string>constant.numeric.hex</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b0[oOqQ][0-7]+\b</string>
+			<key>name</key>
+			<string>constant.numeric.octal</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b[0-7]+[oOqQ]\b</string>
+			<key>name</key>
+			<string>constant.numeric.octal</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b0[bByY][01\_]+\b</string>
+			<key>name</key>
+			<string>constant.numeric.binary</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b[01\_]+[bByY]\b</string>
+			<key>name</key>
+			<string>constant.numeric.binary</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -278,8 +306,8 @@
 		</dict>
 	</array>
 	<key>scopeName</key>
-	<string>source.asm.x86</string>
+	<string>source.asm.nasm</string>
 	<key>uuid</key>
-	<string>84DDB367-0875-4FF3-8047-D3FF2988B3C9</string>
+	<string>b073db9a-dc3a-42aa-9eb9-990a2cea07fa</string>
 </dict>
 </plist>
